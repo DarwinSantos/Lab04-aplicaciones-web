@@ -1,1 +1,0 @@
-app.use('/data_lib', express.static(path.join(__dirname, 'data_lib')));
