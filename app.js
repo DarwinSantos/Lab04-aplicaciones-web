@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const port = 8080;
+const port = 8080, qs=require('querystring');
 
 const server = http.createServer((req, res) => {
     let filePath = path.join(
@@ -37,6 +37,26 @@ const server = http.createServer((req, res) => {
 
     const readStream = fs.createReadStream(filePath);
     readStream.pipe(res);
+
+    
+    // logica del form
+
+    if(req.method=='POST'){
+        var body='';
+        req.on('data',function(data){
+            body+=data;
+
+            if(body.length>1e6){
+                req.connection.destroy();
+            }
+        });
+
+        req.on('end',function(){
+            var post=qs.parse(body);
+            console.log(post.names)
+        })
+    }
+
 });
 
 server.listen(port, (err) => {
